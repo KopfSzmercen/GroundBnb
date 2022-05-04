@@ -44,6 +44,8 @@ const NavPopover = () => {
         <AccountCircleIcon fontSize="large" />
       </IconButton>
       <Popover
+        data-testid="popover"
+        aria-label="options-popover"
         id={id}
         open={open}
         anchorEl={anchorEl}
@@ -67,6 +69,7 @@ const NavPopover = () => {
             padding: "10px"
           }}
         >
+          {/*eslint-disable-next-line */}
           <ListItem button onClick={() => router.push("/auth/login")}>
             <ListItemText primary="Log in" />
           </ListItem>
@@ -74,6 +77,7 @@ const NavPopover = () => {
           <ListItem
             button
             divider
+            // eslint-disable-next-line
             onClick={() => router.push("/auth/register")}
           >
             <ListItemText primary="Register" />

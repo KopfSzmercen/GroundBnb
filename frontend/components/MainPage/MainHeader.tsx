@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
-import { Box, minWidth } from "@mui/system";
-import React from "react";
+import { Box } from "@mui/system";
 
 const MainHeader = () => {
   return (

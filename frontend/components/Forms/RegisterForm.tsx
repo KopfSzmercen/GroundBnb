@@ -1,50 +1,52 @@
-import React from "react";
-import FormWrapper from "./FormWrapper";
-import { emailErr, nameErr, passwordErr } from "./InputErrorsMsg";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Alert, AlertTitle, Button, Stack } from "@mui/material";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { RegisterInput } from "../../types/form-inputs/inputs";
-import { Stack, Button } from "@mui/material";
-import EmailInput from "./inputs/EmailInput";
-import PasswordInput from "./inputs/PasswordInput";
-import NameInput from "./inputs/NameInput";
 import { useMutation } from "react-query";
 import axiosInstance from "../../axios.config";
-
-const schema = yup.object().shape({
-  email: yup
-    .string()
-    .email(emailErr.isEmail)
-    .required("This field is required"),
-  password: yup
-    .string()
-    .min(4, passwordErr.minLength)
-    .max(20, passwordErr.maxLength)
-    .required("This field is required"),
-  firstName: yup
-    .string()
-    .min(4, nameErr.minLength)
-    .max(25, nameErr.maxLength)
-    .required("This field is required"),
-  lastName: yup
-    .string()
-    .min(4, nameErr.minLength)
-    .max(25, nameErr.maxLength)
-    .required("This field is required")
-});
+import {
+  AuthRegisterFormError,
+  RegisterInput
+} from "../../types/form-inputs/inputs";
+import FormWrapper from "./FormWrapper";
+import EmailInput from "./inputs/EmailInput";
+import NameInput from "./inputs/NameInput";
+import PasswordInput from "./inputs/PasswordInput";
+import { registerSchema } from "./schemas";
 
 const RegisterForm: React.FC = () => {
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const methods = useForm<RegisterInput>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(registerSchema)
   });
 
-  const mutation = useMutation((data: RegisterInput) => {
-    return axiosInstance.post("auth/register", data);
-  });
+  const router = useRouter();
+
+  const mutation = useMutation(
+    (data: RegisterInput) => {
+      return axiosInstance.post("auth/register", data, {
+        withCredentials: true
+      });
+    },
+    {
+      onError: (error: AuthRegisterFormError) => {
+        if (!error.response) {
+          return router.push("/error");
+        }
+        error.response.data.message.forEach((e) => {
+          methods.setError(e.field, { message: e.message });
+        });
+      },
+      onSuccess: () => {
+        methods.reset();
+        setIsSuccess(true);
+      }
+    }
+  );
 
   const submitHandler: SubmitHandler<RegisterInput> = (data: RegisterInput) => {
-    console.log(data);
     mutation.mutate(data);
   };
 
@@ -56,6 +58,7 @@ const RegisterForm: React.FC = () => {
             width: "100%",
             marginTop: "2em"
           }}
+          //eslint-disable-next-line
           onSubmit={methods.handleSubmit(submitHandler)}
         >
           <Stack gap={3} width="100%">
@@ -63,11 +66,33 @@ const RegisterForm: React.FC = () => {
             <PasswordInput />
             <NameInput first={true} />
             <NameInput first={false} />
+
+            {isSuccess && (
+              <Alert
+                severity="success"
+                sx={{ display: "grid", placeItems: "center" }}
+              >
+                <Stack textAlign="center" gap={3}>
+                  <AlertTitle>Register uccessfull!</AlertTitle>
+
+                  <Button
+                    color="success"
+                    href="/auth/login"
+                    variant="contained"
+                  >
+                    Log in
+                  </Button>
+                </Stack>
+              </Alert>
+            )}
             <Button
               type="submit"
               variant="contained"
               size="large"
-              disabled={Object.values(methods.formState.errors).length > 0}
+              disabled={
+                Object.values(methods.formState.errors).length > 0 ||
+                mutation.isLoading
+              }
             >
               Register
             </Button>

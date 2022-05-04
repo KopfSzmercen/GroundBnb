@@ -1,10 +1,8 @@
 import { Grid } from "@mui/material";
-import Image from "next/image";
-import React from "react";
 
-import image1 from "../../public/i1.jpg";
-import image2 from "../../public/i2.jpg";
-import image3 from "../../public/i3.jpg";
+import image1 from "../../../public/i1.jpg";
+import image2 from "../../../public/i2.jpg";
+import image3 from "../../../public/i3.jpg";
 import ImageCard from "./ImageCard";
 
 const ImagesSection = () => {

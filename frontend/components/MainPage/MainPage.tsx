@@ -1,8 +1,8 @@
 import { Box, Button, Stack } from "@mui/material";
 import Description from "./Description";
-import FaqSection from "./FaqSection";
-import Footer from "./Footer";
-import ImagesSection from "./ImagesSection";
+import FaqSection from "./FaqSection/FaqSection";
+import Footer from "../Global/Footer";
+import ImagesSection from "./ImageSection/ImagesSection";
 import MainHeader from "./MainHeader";
 
 import { useRouter } from "next/router";
@@ -37,6 +37,7 @@ const MainPage = () => {
         variant="contained"
         color="secondary"
         size="large"
+        //eslint-disable-next-line
         onClick={() => router.push("/auth/login")}
       >
         Start now!

@@ -17,12 +17,14 @@ const EmailInput = () => {
       defaultValue=""
       render={({ field }) => (
         <TextField
+          data-testid="email-input"
           {...field}
           label="Email"
           variant="outlined"
           fullWidth
           type="email"
           error={!!errors.email}
+          // eslint-disable-next-line
           helperText={errors.email ? errors.email?.message : ""}
           InputLabelProps={{
             style: { color: mode === "light" ? "#000" : "#fafafa" }

@@ -25,13 +25,14 @@ const AccordionRow: React.FC<{ header: string; text: string }> = ({
         expandIcon={<ExpandMoreIcon color="primary" fontSize="large" />}
         aria-controls="panel1a-content"
         id="panel1a-header"
+        data-testid="open-acc"
       >
         <Typography fontWeight="bold" fontSize="large" letterSpacing=".5px">
           {header}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography>{text}</Typography>
+        <Typography data-testid="text-acc">{text}</Typography>
       </AccordionDetails>
     </Accordion>
   );
@@ -39,7 +40,7 @@ const AccordionRow: React.FC<{ header: string; text: string }> = ({
 
 const FaqSection = () => {
   return (
-    <Box sx={{ width: "95%", maxWidth: "1200px" }}>
+    <Box data-testid="faq-section" sx={{ width: "95%", maxWidth: "1200px" }}>
       <AccordionRow
         header="1. Lorem ipsum dolor sit amet?"
         text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate, obcaecati possimus? Atque debitis voluptate deserunt accusamus sequi maiores obcaecati assumenda aut, non, doloremque, ipsam perspiciatis error impedit iure earum possimus at asperiores odio ipsa illum exercitationem beatae! Unde, omnis similique?"

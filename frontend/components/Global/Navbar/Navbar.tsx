@@ -7,6 +7,7 @@ import NavPopover from "./NavPopover";
 const Navbar = () => {
   return (
     <Box
+      data-testid="navbar"
       sx={{
         bgcolor: "background.paper",
         width: "100%",
@@ -16,8 +17,10 @@ const Navbar = () => {
         padding: ".5rem 2rem"
       }}
     >
-      <Typography variant="h6">
-        <Link href="/">GroundBNB</Link>
+      <Typography variant="h6" data-testid="home-link">
+        <Link aria-label="home-link" href="/">
+          GroundBNB
+        </Link>
       </Typography>
 
       <Box>

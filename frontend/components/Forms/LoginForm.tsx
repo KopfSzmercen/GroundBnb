@@ -1,48 +1,40 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Paper, Stack, Typography } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import * as yup from "yup";
 import { LoginInput } from "../../types/form-inputs/inputs";
-import EmailInput from "./inputs/EmailInput";
-import { emailErr, passwordErr } from "./InputErrorsMsg";
-import PasswordInput from "./inputs/PasswordInput";
 import FormWrapper from "./FormWrapper";
-
-const schema = yup.object().shape({
-  email: yup
-    .string()
-    .email(emailErr.isEmail)
-    .required("This field is required"),
-  password: yup
-    .string()
-    .min(4, passwordErr.minLength)
-    .max(20, passwordErr.maxLength)
-    .required("This field is required")
-});
+import { useLogIn } from "./hooks/useLogIn";
+import EmailInput from "./inputs/EmailInput";
+import PasswordInput from "./inputs/PasswordInput";
+import { loginSchema } from "./schemas";
 
 const LoginForm = () => {
   const methods = useForm<LoginInput>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(loginSchema)
   });
 
+  const { mutate } = useLogIn(methods.setError);
+
   const submitHandler: SubmitHandler<LoginInput> = (data: LoginInput) => {
-    console.log(data);
+    mutate(data);
   };
 
   return (
-    <FormWrapper header="Log in">
+    <FormWrapper data-testid="login-form" header="Log in">
       <FormProvider {...methods}>
         <form
           style={{
             width: "100%",
             marginTop: "2em"
           }}
+          //eslint-disable-next-line
           onSubmit={methods.handleSubmit(submitHandler)}
         >
           <Stack gap={3} width="100%">
             <EmailInput />
             <PasswordInput />
             <Button
+              data-testid="log-in-btn"
               type="submit"
               variant="contained"
               size="large"

@@ -14,6 +14,7 @@ const NameInput: React.FC<{ first: boolean }> = ({ first }) => {
 
   return (
     <Controller
+      data-testid="name-input"
       name={type}
       control={control}
       defaultValue=""
@@ -25,6 +26,7 @@ const NameInput: React.FC<{ first: boolean }> = ({ first }) => {
           fullWidth
           type="text"
           error={!!errors[type]}
+          //eslint-disable-next-line
           helperText={errors[type] ? errors[type]?.message : ""}
           InputLabelProps={{
             style: { color: mode === "light" ? "#000" : "#fafafa" }

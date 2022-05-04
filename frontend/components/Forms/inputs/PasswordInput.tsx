@@ -22,7 +22,9 @@ const PasswordInput = () => {
           variant="outlined"
           fullWidth
           type="password"
+          //eslint-disable-next-line
           error={!!errors.password}
+          //eslint-disable-next-line
           helperText={errors.password ? errors.password?.message : ""}
           InputLabelProps={{
             style: { color: mode === "light" ? "#000" : "#fafafa" }

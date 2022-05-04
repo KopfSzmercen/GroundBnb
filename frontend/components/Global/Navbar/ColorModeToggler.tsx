@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import { Switch } from "@mui/material";
 import React from "react";
-import { ColorModeContext } from "../../theme/ColorMode";
+import { ColorModeContext } from "../../../theme/ColorMode";
 
-const MaterialUISwitch = styled(Switch)(({}) => ({
+const MaterialUISwitch = styled(Switch)(() => ({
   width: 62,
   height: 34,
   padding: 7,

@@ -9,15 +9,29 @@ import "@fontsource/roboto/700.css";
 
 import { Box } from "@mui/material";
 import ColorModeProvider from "../theme/ColorMode";
-import Navbar from "../components/Navbar/Navbar";
+import Navbar from "../components/Global/Navbar/Navbar";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import { LoginResponse, LoginSuccess } from "../types/login/login";
+import { useRouter } from "next/router";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
+  const router = useRouter();
+
+  queryClient.setMutationDefaults("login", {
+    onSuccess: async (data: LoginResponse) => {
+      const currentUserData = data.data as LoginSuccess;
+      queryClient.setQueryData("current-user", { ...currentUserData });
+      await router.push("/home");
+    }
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <ColorModeProvider>
+        {/* eslint-disable-next-line */}
         <Hydrate state={pageProps.dehydratedState}>
           <Box
             sx={{
