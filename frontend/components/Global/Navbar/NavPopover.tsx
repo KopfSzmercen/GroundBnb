@@ -1,17 +1,9 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import {
-  Divider,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Popover
-} from "@mui/material";
-import { useRouter } from "next/router";
+import { IconButton, List, Popover } from "@mui/material";
 import React from "react";
+import PopoverOptions from "./PopoverOptions";
 
-const NavPopover = () => {
-  const router = useRouter();
+const NavPopover: React.FC<{ currentUser: boolean }> = ({ currentUser }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -69,25 +61,7 @@ const NavPopover = () => {
             padding: "10px"
           }}
         >
-          {/*eslint-disable-next-line */}
-          <ListItem button onClick={() => router.push("/auth/login")}>
-            <ListItemText primary="Log in" />
-          </ListItem>
-
-          <ListItem
-            button
-            divider
-            // eslint-disable-next-line
-            onClick={() => router.push("/auth/register")}
-          >
-            <ListItemText primary="Register" />
-          </ListItem>
-
-          <Divider />
-
-          <ListItem button>
-            <ListItemText primary="Help" />
-          </ListItem>
+          <PopoverOptions currentUser={currentUser} />
         </List>
       </Popover>
     </>

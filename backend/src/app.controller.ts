@@ -1,4 +1,5 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller()
 export class AppController {
@@ -18,4 +19,9 @@ export class AppController {
   // ) {
   //   return this.cloudinary.uploadImage(req, file);
   // }
+  @UseGuards(AuthGuard)
+  @Get('/')
+  test() {
+    return 'Hello world';
+  }
 }

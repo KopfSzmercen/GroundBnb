@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { User } from 'src/entities/user.entity';
 import { UsersService } from '../users/users.service';
@@ -12,7 +16,12 @@ export class AuthService {
   async register(body: RegisterDto): Promise<User | null> {
     const user = await this.users.findOneByEmail(body.email);
     if (user)
-      throw new BadRequestException(`Email ${body.email} is already used`);
+      throw new BadRequestException([
+        {
+          field: 'email',
+          message: `Email ${body.email} is already used`,
+        },
+      ]);
 
     const hashedPassword = await argon2.hash(body.password);
     const newUser = await this.users.create({
@@ -23,12 +32,28 @@ export class AuthService {
     return newUser;
   }
 
-  async signin(body: SignInDto): Promise<User | null> {
+  async signin(
+    body: SignInDto,
+    request: Express.Request,
+  ): Promise<User | null> {
     const user = await this.users.findOneByEmail(body.email);
-    if (!user) throw new BadRequestException('No user with this email');
+    const invalidCredentialsError = [
+      {
+        field: 'email',
+        message: 'Invalid credentials',
+      },
+      {
+        field: 'password',
+        message: 'Invalid credentials',
+      },
+    ];
+    if (!user) throw new UnauthorizedException(invalidCredentialsError);
 
     const passwordsDoMatch = await argon2.verify(user.password, body.password);
-    if (!passwordsDoMatch) throw new BadRequestException('Invalid password');
+    if (!passwordsDoMatch)
+      throw new UnauthorizedException(invalidCredentialsError);
+
+    request.session.userId = user.id;
 
     return user;
   }

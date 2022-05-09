@@ -1,10 +1,17 @@
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
-import React from "react";
+import { useQuery } from "react-query";
+import axiosInstance from "../../../axios.config";
+import { LoginSuccess } from "../../../types/login/login";
 import ColorModeToggler from "./ColorModeToggler";
 import NavPopover from "./NavPopover";
 
 const Navbar = () => {
+  const { data } = useQuery<LoginSuccess>("getCurrentUser", () => {
+    return axiosInstance.get("/auth/getMe");
+  });
+
+  const isCurrentUser = data?.data?.id ? true : false;
   return (
     <Box
       data-testid="navbar"
@@ -25,7 +32,8 @@ const Navbar = () => {
 
       <Box>
         <ColorModeToggler />
-        <NavPopover />
+
+        <NavPopover currentUser={isCurrentUser} />
       </Box>
     </Box>
   );
